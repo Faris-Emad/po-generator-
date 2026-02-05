@@ -827,14 +827,15 @@ def open_browser():
 
 if __name__ == '__main__':
     print("=" * 60)
-    print("🚀 نظام إنشاء طلبات التوريد - شركة الأمانة")
+    print("🚀 Supply Order Creation System - Al-Amana Company")
     print("=" * 60)
-    print("✅ البرنامج يعمل الآن...")
-    print("🌐 سيتم فتح المتصفح تلقائياً...")
-    print("📍 الرابط: http://localhost:5000")
+    print("✅ The system is now running...")
+    print("🌐 Your browser will open automatically...")
+    print("📍 URL: http://localhost:5000")
     print("=" * 60)
-    print("⚠️  لإيقاف البرنامج: اضغط Ctrl+C")
+    print("⚠️  To stop the system: Press Ctrl+C")
     print("=" * 60)
+
     
     # فتح المتصفح في thread منفصل
     threading.Thread(target=open_browser, daemon=True).start()
