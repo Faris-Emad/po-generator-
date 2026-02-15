@@ -210,7 +210,7 @@ def create_professional_excel(order_data):
     
     # رأس الجدول - Table Headers
     headers = ['م', 'كود الصنف', 'اسم الصنف', 'الوصف', 'الكمية', 'سعر الوحدة', 'الإجمالي']
-    header_widths = [8, 20, 35, 40, 15, 20, 20]
+    header_widths = [25, 25, 35, 45, 18, 25, 25]
     
     for col_idx, (header, width) in enumerate(zip(headers, header_widths), start=1):
         cell = sheet.cell(row=current_row, column=col_idx)
@@ -219,7 +219,10 @@ def create_professional_excel(order_data):
         cell.alignment = Alignment(horizontal='center', vertical='center', readingOrder=2)
         cell.fill = PatternFill(start_color=HEADER_COLOR, end_color=HEADER_COLOR, fill_type='solid')
         cell.border = medium_border
-        sheet.column_dimensions[get_column_letter(col_idx)].width = width
+        # Only set width if it's larger than what might already be set
+        current_width = sheet.column_dimensions[get_column_letter(col_idx)].width
+        if current_width is None or width > current_width:
+            sheet.column_dimensions[get_column_letter(col_idx)].width = width
     
     sheet.row_dimensions[current_row].height = 22
     current_row += 1
