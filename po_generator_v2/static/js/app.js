@@ -37,12 +37,9 @@ function showToast(message, type = 'success') {
     toastIcon.className = `toast-icon me-2 ${icon}`;
     toastMessage.textContent = message;
     
-    // إزالة جميع الكلاسات السابقة
-    toastEl.className = 'toast align-items-center border-0';
+    // إزالة جميع الكلاسات السابقة وإضافة الكلاسات الجديدة
+    toastEl.className = `toast align-items-center border-0 ${bgClass}`;
     toastBody.className = 'toast-body fw-bold';
-    
-    // إضافة الكلاس الجديد
-    toastEl.classList.add(bgClass);
     
     // عرض الإشعار
     const toast = new bootstrap.Toast(toastEl, {
