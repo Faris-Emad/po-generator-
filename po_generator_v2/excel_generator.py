@@ -9,6 +9,13 @@ from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 from openpyxl.utils import get_column_letter
 from datetime import datetime
 
+# Column width constants for Arabic text
+LABEL_COLUMN_WIDTH = 25       # For columns with Arabic labels (e.g., "رقم الطلب:")
+STANDARD_COLUMN_WIDTH = 25    # For standard data columns
+WIDE_COLUMN_WIDTH = 35        # For wider content like names
+EXTRA_WIDE_COLUMN_WIDTH = 45  # For extra wide content like descriptions
+NARROW_COLUMN_WIDTH = 18      # For narrow columns like quantities
+
 
 def create_professional_excel(order_data):
     """
@@ -191,7 +198,15 @@ def create_professional_excel(order_data):
     
     # رأس الجدول - Table Headers
     headers = ['م', 'كود الصنف', 'اسم الصنف', 'الوصف', 'الكمية', 'سعر الوحدة', 'الإجمالي']
-    header_widths = [5, 15, 25, 30, 12, 15, 15]
+    header_widths = [
+        LABEL_COLUMN_WIDTH,        # م - Number column
+        STANDARD_COLUMN_WIDTH,     # كود الصنف - Product code
+        WIDE_COLUMN_WIDTH,         # اسم الصنف - Product name
+        EXTRA_WIDE_COLUMN_WIDTH,   # الوصف - Description
+        NARROW_COLUMN_WIDTH,       # الكمية - Quantity
+        STANDARD_COLUMN_WIDTH,     # سعر الوحدة - Unit price
+        STANDARD_COLUMN_WIDTH      # الإجمالي - Total
+    ]
     
     for col_idx, (header, width) in enumerate(zip(headers, header_widths), start=1):
         cell = sheet.cell(row=current_row, column=col_idx)
@@ -200,7 +215,10 @@ def create_professional_excel(order_data):
         cell.alignment = Alignment(horizontal='center', vertical='center', readingOrder=2)
         cell.fill = PatternFill(start_color=HEADER_COLOR, end_color=HEADER_COLOR, fill_type='solid')
         cell.border = medium_border
-        sheet.column_dimensions[get_column_letter(col_idx)].width = width
+        # Only set width if it's larger than what might already be set
+        current_width = sheet.column_dimensions[get_column_letter(col_idx)].width
+        if current_width is None or width > current_width:
+            sheet.column_dimensions[get_column_letter(col_idx)].width = width
     
     sheet.row_dimensions[current_row].height = 22
     current_row += 1
