@@ -74,21 +74,33 @@ def create_professional_excel(order_data):
     sheet[f'A{current_row}'].font = LABEL_FONT
     sheet[f'A{current_row}'].alignment = Alignment(horizontal='right', readingOrder=2)
     
+    # Set column A width for labels
+    sheet.column_dimensions['A'].width = 25
+    
     sheet[f'B{current_row}'] = order_data.get('po_number', '')
     sheet[f'B{current_row}'].font = Font(name='Traditional Arabic', size=12, bold=True, color='0066CC')
     sheet[f'B{current_row}'].alignment = Alignment(horizontal='center', readingOrder=2)
     sheet[f'B{current_row}'].fill = PatternFill(start_color=DATA_HIGHLIGHT, end_color=DATA_HIGHLIGHT, fill_type='solid')
     sheet[f'B{current_row}'].border = thin_border
     
+    # Set column B width
+    sheet.column_dimensions['B'].width = 20
+    
     sheet[f'D{current_row}'] = 'التاريخ:'
     sheet[f'D{current_row}'].font = LABEL_FONT
     sheet[f'D{current_row}'].alignment = Alignment(horizontal='right', readingOrder=2)
+    
+    # Set column D width
+    sheet.column_dimensions['D'].width = 20
     
     sheet[f'E{current_row}'] = order_data.get('po_date', '')
     sheet[f'E{current_row}'].font = DATA_FONT
     sheet[f'E{current_row}'].alignment = Alignment(horizontal='center', readingOrder=2)
     sheet[f'E{current_row}'].fill = PatternFill(start_color=DATA_HIGHLIGHT, end_color=DATA_HIGHLIGHT, fill_type='solid')
     sheet[f'E{current_row}'].border = thin_border
+    
+    # Set column E width
+    sheet.column_dimensions['E'].width = 20
     
     current_row += 1
     
@@ -137,6 +149,9 @@ def create_professional_excel(order_data):
     sheet[f'B{current_row}'].alignment = Alignment(horizontal='right', readingOrder=2)
     sheet[f'B{current_row}'].border = thin_border
     
+    # Set column C width
+    sheet.column_dimensions['C'].width = 25
+    
     sheet[f'D{current_row}'] = 'الرقم الضريبي:'
     sheet[f'D{current_row}'].font = LABEL_FONT
     sheet[f'D{current_row}'].alignment = Alignment(horizontal='right', readingOrder=2)
@@ -165,6 +180,10 @@ def create_professional_excel(order_data):
     sheet[f'E{current_row}'].alignment = Alignment(horizontal='right', readingOrder=2)
     sheet[f'E{current_row}'].border = thin_border
     
+    # Set column F and G widths
+    sheet.column_dimensions['F'].width = 25
+    sheet.column_dimensions['G'].width = 20
+    
     current_row += 1
     
     # العنوان
@@ -191,7 +210,7 @@ def create_professional_excel(order_data):
     
     # رأس الجدول - Table Headers
     headers = ['م', 'كود الصنف', 'اسم الصنف', 'الوصف', 'الكمية', 'سعر الوحدة', 'الإجمالي']
-    header_widths = [5, 15, 25, 30, 12, 15, 15]
+    header_widths = [8, 20, 35, 40, 15, 20, 20]
     
     for col_idx, (header, width) in enumerate(zip(headers, header_widths), start=1):
         cell = sheet.cell(row=current_row, column=col_idx)

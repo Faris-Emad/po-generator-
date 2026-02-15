@@ -15,6 +15,12 @@ from reportlab.lib.enums import TA_RIGHT, TA_CENTER
 from arabic_reshaper import reshape
 from bidi.algorithm import get_display
 import io
+import os
+
+# Register Arabic fonts
+FONTS_DIR = os.path.join(os.path.dirname(__file__), 'fonts')
+pdfmetrics.registerFont(TTFont('ArabicFont', os.path.join(FONTS_DIR, 'NotoSansArabic-Regular.ttf')))
+pdfmetrics.registerFont(TTFont('ArabicFont-Bold', os.path.join(FONTS_DIR, 'NotoSansArabic-Bold.ttf')))
 
 
 def prepare_arabic_text(text):
@@ -56,7 +62,7 @@ def create_pdf_from_order(order_data):
     title_style = ParagraphStyle(
         'ArabicTitle',
         parent=styles['Heading1'],
-        fontName='Helvetica-Bold',
+        fontName='ArabicFont-Bold',
         fontSize=20,
         textColor=colors.HexColor('#2B3E50'),
         alignment=TA_CENTER,
@@ -67,7 +73,7 @@ def create_pdf_from_order(order_data):
     subtitle_style = ParagraphStyle(
         'ArabicSubtitle',
         parent=styles['Heading2'],
-        fontName='Helvetica-Bold',
+        fontName='ArabicFont-Bold',
         fontSize=16,
         textColor=colors.HexColor('#2B3E50'),
         alignment=TA_CENTER,
@@ -78,7 +84,7 @@ def create_pdf_from_order(order_data):
     normal_style = ParagraphStyle(
         'ArabicNormal',
         parent=styles['Normal'],
-        fontName='Helvetica',
+        fontName='ArabicFont',
         fontSize=11,
         alignment=TA_RIGHT,
         spaceAfter=8
@@ -106,10 +112,10 @@ def create_pdf_from_order(order_data):
         ('BACKGROUND', (0, 1), (-1, 1), colors.HexColor('#E8F0F8')),
         ('TEXTCOLOR', (0, 0), (-1, -1), colors.black),
         ('ALIGN', (0, 0), (-1, -1), 'RIGHT'),
-        ('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),
+        ('FONTNAME', (0, 0), (-1, -1), 'ArabicFont'),
         ('FONTSIZE', (0, 0), (-1, -1), 10),
-        ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
-        ('FONTNAME', (2, 0), (2, -1), 'Helvetica-Bold'),
+        ('FONTNAME', (0, 0), (0, -1), 'ArabicFont-Bold'),
+        ('FONTNAME', (2, 0), (2, -1), 'ArabicFont-Bold'),
         ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
         ('TOPPADDING', (0, 0), (-1, -1), 8),
         ('GRID', (0, 0), (-1, -1), 0.5, colors.grey)
@@ -136,10 +142,10 @@ def create_pdf_from_order(order_data):
         ('BACKGROUND', (0, 0), (-1, -1), colors.HexColor('#F2F2F2')),
         ('TEXTCOLOR', (0, 0), (-1, -1), colors.black),
         ('ALIGN', (0, 0), (-1, -1), 'RIGHT'),
-        ('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),
+        ('FONTNAME', (0, 0), (-1, -1), 'ArabicFont'),
         ('FONTSIZE', (0, 0), (-1, -1), 10),
-        ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
-        ('FONTNAME', (2, 0), (2, 1), 'Helvetica-Bold'),
+        ('FONTNAME', (0, 0), (0, -1), 'ArabicFont-Bold'),
+        ('FONTNAME', (2, 0), (2, 1), 'ArabicFont-Bold'),
         ('SPAN', (1, 2), (3, 2)),
         ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
         ('TOPPADDING', (0, 0), (-1, -1), 8),
@@ -184,13 +190,13 @@ def create_pdf_from_order(order_data):
         # رأس الجدول
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#2B3E50')),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
-        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('FONTNAME', (0, 0), (-1, 0), 'ArabicFont-Bold'),
         ('FONTSIZE', (0, 0), (-1, 0), 11),
         ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
         # البيانات
         ('BACKGROUND', (0, 1), (-1, -1), colors.white),
         ('TEXTCOLOR', (0, 1), (-1, -1), colors.black),
-        ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+        ('FONTNAME', (0, 1), (-1, -1), 'ArabicFont'),
         ('FONTSIZE', (0, 1), (-1, -1), 9),
         ('ALIGN', (0, 1), (0, -1), 'CENTER'),  # رقم الصنف
         ('ALIGN', (1, 1), (1, -1), 'CENTER'),  # الكود
@@ -225,7 +231,7 @@ def create_pdf_from_order(order_data):
         ('TEXTCOLOR', (0, 2), (-1, 2), colors.white),
         ('ALIGN', (0, 0), (0, -1), 'RIGHT'),
         ('ALIGN', (1, 0), (1, -1), 'CENTER'),
-        ('FONTNAME', (0, 0), (-1, -1), 'Helvetica-Bold'),
+        ('FONTNAME', (0, 0), (-1, -1), 'ArabicFont-Bold'),
         ('FONTSIZE', (0, 0), (-1, 1), 10),
         ('FONTSIZE', (0, 2), (-1, 2), 12),
         ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
@@ -259,8 +265,8 @@ def create_pdf_from_order(order_data):
                 ('BACKGROUND', (0, 0), (-1, -1), colors.HexColor('#F2F2F2')),
                 ('TEXTCOLOR', (0, 0), (-1, -1), colors.black),
                 ('ALIGN', (0, 0), (-1, -1), 'RIGHT'),
-                ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
-                ('FONTNAME', (1, 0), (1, -1), 'Helvetica'),
+                ('FONTNAME', (0, 0), (0, -1), 'ArabicFont-Bold'),
+                ('FONTNAME', (1, 0), (1, -1), 'ArabicFont'),
                 ('FONTSIZE', (0, 0), (-1, -1), 10),
                 ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
                 ('TOPPADDING', (0, 0), (-1, -1), 8),
@@ -280,7 +286,7 @@ def create_pdf_from_order(order_data):
             ('BACKGROUND', (0, 0), (-1, -1), colors.HexColor('#F9F9F9')),
             ('TEXTCOLOR', (0, 0), (-1, -1), colors.black),
             ('ALIGN', (0, 0), (-1, -1), 'RIGHT'),
-            ('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),
+            ('FONTNAME', (0, 0), (-1, -1), 'ArabicFont'),
             ('FONTSIZE', (0, 0), (-1, -1), 10),
             ('BOTTOMPADDING', (0, 0), (-1, -1), 10),
             ('TOPPADDING', (0, 0), (-1, -1), 10),
@@ -298,7 +304,7 @@ def create_pdf_from_order(order_data):
     signatures_table = Table(signatures_data, colWidths=[85*mm, 85*mm])
     signatures_table.setStyle(TableStyle([
         ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-        ('FONTNAME', (0, 0), (-1, -1), 'Helvetica-Bold'),
+        ('FONTNAME', (0, 0), (-1, -1), 'ArabicFont-Bold'),
         ('FONTSIZE', (0, 0), (-1, -1), 11),
         ('BOTTOMPADDING', (0, 0), (-1, -1), 10),
         ('TOPPADDING', (0, 0), (-1, -1), 10)
