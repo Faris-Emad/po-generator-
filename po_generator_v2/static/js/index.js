@@ -149,7 +149,8 @@ function calculateTotals() {
         subtotal += total;
     });
     
-    const taxRate = parseFloat(document.getElementById('taxRate').value) || 14;
+    const taxRateValue = parseFloat(document.getElementById('taxRate').value);
+    const taxRate = isNaN(taxRateValue) ? 14 : taxRateValue;
     const tax = subtotal * (taxRate / 100);
     const finalTotal = subtotal + tax;
     
