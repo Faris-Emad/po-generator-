@@ -136,7 +136,16 @@
                                         <td colspan="2" class="fw-bold fs-5 text-center" id="subtotal">0.00 ج.م</td>
                                     </tr>
                                     <tr>
-                                        <td colspan="7" class="text-end fw-bold fs-5">ضريبة القيمة المضافة (14%):</td>
+                                        <td colspan="6" class="text-end fw-bold fs-5">
+                                            <span id="taxLabel">ضريبة القيمة المضافة (14%):</span>
+                                        </td>
+                                        <td class="text-center">
+                                            <input type="number" class="form-control" id="taxRate" 
+                                                   value="14" step="0.01" min="0" max="100" 
+                                                   oninput="calculateTotals()" 
+                                                   style="width: 80px; display: inline-block;">
+                                            <span class="ms-1">%</span>
+                                        </td>
                                         <td colspan="2" class="fw-bold fs-5 text-center" id="taxAmount">0.00 ج.م</td>
                                     </tr>
                                     <tr class="table-primary">

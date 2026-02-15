@@ -84,6 +84,7 @@ class Order(db.Model):
     subtotal = db.Column(db.Float, default=0.0)
     tax_amount = db.Column(db.Float, default=0.0)
     total = db.Column(db.Float, default=0.0)
+    tax_rate = db.Column(db.Float, default=14.0)  # نسبة ضريبة القيمة المضافة
     
     # حالة الطلب - Order Status
     status = db.Column(db.String(50), default='مسودة')  # مسودة، مؤكد، ملغي
@@ -110,6 +111,7 @@ class Order(db.Model):
             'subtotal': self.subtotal,
             'tax_amount': self.tax_amount,
             'total': self.total,
+            'tax_rate': self.tax_rate,
             'status': self.status,
             'items': [item.to_dict() for item in self.items]
         }
