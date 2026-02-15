@@ -215,7 +215,7 @@ function restoreFormData(data) {
     document.getElementById('paymentTerms').value = data.payment_terms || '';
     document.getElementById('notes').value = data.notes || '';
     
-    if (data.tax_rate) {
+    if (data.tax_rate !== undefined && data.tax_rate !== null) {
         document.getElementById('taxRate').value = data.tax_rate;
     }
     
