@@ -207,12 +207,13 @@ def create_pdf_from_order(order_data):
     elements.append(Spacer(1, 5*mm))
     
     # === الإجماليات ===
-    tax_amount = subtotal * 0.14
+    tax_rate = order_data.get('tax_rate', 14)
+    tax_amount = subtotal * (tax_rate / 100)
     final_total = subtotal + tax_amount
     
     totals_data = [
         [prepare_arabic_text('المجموع الفرعي (قبل الضريبة):'), f"{subtotal:,.2f} ج.م"],
-        [prepare_arabic_text('ضريبة القيمة المضافة (14%):'), f"{tax_amount:,.2f} ج.م"],
+        [prepare_arabic_text(f'ضريبة القيمة المضافة ({tax_rate}%):'), f"{tax_amount:,.2f} ج.م"],
         [prepare_arabic_text('الإجمالي النهائي (شامل الضريبة):'), f"{final_total:,.2f} ج.م"]
     ]
     

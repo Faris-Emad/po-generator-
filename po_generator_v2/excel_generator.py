@@ -296,10 +296,11 @@ def create_professional_excel(order_data):
     sheet.row_dimensions[current_row].height = 22
     current_row += 1
     
-    # الضريبة - Tax (14%)
-    tax_amount = subtotal * 0.14
+    # الضريبة - Tax
+    tax_rate = order_data.get('tax_rate', 14)
+    tax_amount = subtotal * (tax_rate / 100)
     sheet.merge_cells(f'A{current_row}:F{current_row}')
-    sheet[f'A{current_row}'] = 'ضريبة القيمة المضافة (14%):'
+    sheet[f'A{current_row}'] = f'ضريبة القيمة المضافة ({tax_rate}%):'
     sheet[f'A{current_row}'].font = LABEL_FONT
     sheet[f'A{current_row}'].alignment = Alignment(horizontal='right', vertical='center', readingOrder=2)
     sheet[f'A{current_row}'].fill = PatternFill(start_color=TOTAL_COLOR, end_color=TOTAL_COLOR, fill_type='solid')

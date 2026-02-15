@@ -188,10 +188,12 @@ def create_order():
             order.items.append(item)
         
         # حساب الإجماليات
-        tax_amount = subtotal * 0.14
+        tax_rate = float(data.get('tax_rate', 14))
+        tax_amount = subtotal * (tax_rate / 100)
         order.subtotal = subtotal
         order.tax_amount = tax_amount
         order.total = subtotal + tax_amount
+        order.tax_rate = tax_rate
         
         db.session.add(order)
         db.session.commit()

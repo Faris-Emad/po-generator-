@@ -220,7 +220,8 @@ function createPrintContent(order) {
         `;
     });
     
-    const tax = subtotal * 0.14;
+    const taxRate = order.tax_rate || 14;
+    const tax = subtotal * (taxRate / 100);
     const total = subtotal + tax;
     
     return `
@@ -291,7 +292,7 @@ function createPrintContent(order) {
                         <td style="font-weight: bold;">${subtotal.toFixed(2)} ج.م</td>
                     </tr>
                     <tr>
-                        <td colspan="5" style="text-align: left; font-weight: bold;">ضريبة القيمة المضافة (14%):</td>
+                        <td colspan="5" style="text-align: left; font-weight: bold;">ضريبة القيمة المضافة (${taxRate}%):</td>
                         <td style="font-weight: bold;">${tax.toFixed(2)} ج.م</td>
                     </tr>
                     <tr>
@@ -408,7 +409,7 @@ async function viewOrderDetails(orderId) {
                                     <td class="fw-bold">${AppHelpers.formatCurrency(order.subtotal)}</td>
                                 </tr>
                                 <tr>
-                                    <td colspan="6" class="text-end fw-bold">ضريبة القيمة المضافة (14%):</td>
+                                    <td colspan="6" class="text-end fw-bold">ضريبة القيمة المضافة (${order.tax_rate || 14}%):</td>
                                     <td class="fw-bold">${AppHelpers.formatCurrency(order.tax_amount)}</td>
                                 </tr>
                                 <tr class="table-primary">

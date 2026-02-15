@@ -149,12 +149,17 @@ function calculateTotals() {
         subtotal += total;
     });
     
-    const tax = subtotal * 0.14;
+    const taxRateValue = parseFloat(document.getElementById('taxRate').value);
+    const taxRate = isNaN(taxRateValue) ? 14 : taxRateValue;
+    const tax = subtotal * (taxRate / 100);
     const finalTotal = subtotal + tax;
     
     document.getElementById('subtotal').textContent = AppHelpers.formatCurrency(subtotal);
     document.getElementById('taxAmount').textContent = AppHelpers.formatCurrency(tax);
     document.getElementById('totalAmount').textContent = AppHelpers.formatCurrency(finalTotal);
+    
+    // تحديث نص الضريبة
+    document.getElementById('taxLabel').textContent = `ضريبة القيمة المضافة (${taxRate}%):`;
 }
 
 // === حفظ البيانات في localStorage ===
@@ -194,6 +199,7 @@ function collectFormData() {
         delivery_location: document.getElementById('deliveryLocation').value,
         payment_terms: document.getElementById('paymentTerms').value,
         notes: document.getElementById('notes').value,
+        tax_rate: document.getElementById('taxRate').value,
         items: items
     };
 }
@@ -208,6 +214,10 @@ function restoreFormData(data) {
     document.getElementById('deliveryLocation').value = data.delivery_location || '';
     document.getElementById('paymentTerms').value = data.payment_terms || '';
     document.getElementById('notes').value = data.notes || '';
+    
+    if (data.tax_rate !== undefined && data.tax_rate !== null) {
+        document.getElementById('taxRate').value = data.tax_rate;
+    }
     
     loadSupplierData();
     
