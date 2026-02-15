@@ -1,0 +1,293 @@
+{% extends "base.html" %}
+
+{% block title %}إنشاء طلب توريد جديد - نظام طلبات التوريد{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card shadow-lg border-0">
+            <div class="card-header bg-primary text-white py-3">
+                <h2 class="mb-0">
+                    <i class="fas fa-file-invoice-dollar me-2"></i>
+                    إنشاء طلب توريد جديد
+                </h2>
+            </div>
+            <div class="card-body p-4">
+                <form id="orderForm">
+                    <!-- بيانات الطلب الأساسية -->
+                    <div class="section-card mb-4">
+                        <h4 class="section-title">
+                            <i class="fas fa-info-circle me-2"></i>
+                            بيانات الطلب الأساسية
+                        </h4>
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">رقم الطلب *</label>
+                                <input type="text" class="form-control form-control-lg" id="poNumber" 
+                                       value="{{ next_po_number }}" readonly required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">التاريخ *</label>
+                                <input type="date" class="form-control form-control-lg" id="poDate" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">الحالة</label>
+                                <input type="text" class="form-control form-control-lg" value="مؤكد" readonly>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- بيانات الشركة -->
+                    <div class="section-card mb-4">
+                        <h4 class="section-title">
+                            <i class="fas fa-building me-2"></i>
+                            بيانات الشركة
+                        </h4>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">الرقم الضريبي</label>
+                                <input type="text" class="form-control form-control-lg" id="companyTaxId">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">السجل التجاري</label>
+                                <input type="text" class="form-control form-control-lg" id="commercialReg">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- بيانات المورد -->
+                    <div class="section-card mb-4">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h4 class="section-title mb-0">
+                                <i class="fas fa-truck me-2"></i>
+                                بيانات المورد
+                            </h4>
+                            <button type="button" class="btn btn-success btn-lg" onclick="showAddSupplierModal()">
+                                <i class="fas fa-plus-circle me-2"></i>
+                                إضافة مورد جديد
+                            </button>
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-md-12">
+                                <label class="form-label fw-bold">اختر المورد *</label>
+                                <select class="form-select form-select-lg" id="supplierId" required onchange="loadSupplierData()">
+                                    <option value="">-- اختر المورد --</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">الرقم الضريبي</label>
+                                <input type="text" class="form-control form-control-lg" id="supplierTaxId" readonly>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">التليفون</label>
+                                <input type="text" class="form-control form-control-lg" id="supplierPhone" readonly>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">البريد الإلكتروني</label>
+                                <input type="email" class="form-control form-control-lg" id="supplierEmail" readonly>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">العنوان</label>
+                                <input type="text" class="form-control form-control-lg" id="supplierAddress" readonly>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- الأصناف -->
+                    <div class="section-card mb-4">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h4 class="section-title mb-0">
+                                <i class="fas fa-boxes me-2"></i>
+                                أصناف الطلب
+                            </h4>
+                            <div>
+                                <button type="button" class="btn btn-success btn-lg me-2" onclick="showAddProductModal()">
+                                    <i class="fas fa-box me-2"></i>
+                                    إضافة صنف جديد للمخزن
+                                </button>
+                                <button type="button" class="btn btn-primary btn-lg" onclick="addItemRow()">
+                                    <i class="fas fa-plus me-2"></i>
+                                    إضافة صنف للطلب
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th width="5%">م</th>
+                                        <th width="20%">اختر الصنف</th>
+                                        <th width="10%">الكود</th>
+                                        <th width="20%">الاسم</th>
+                                        <th width="20%">الوصف</th>
+                                        <th width="8%">الكمية</th>
+                                        <th width="10%">السعر</th>
+                                        <th width="7%">الإجمالي</th>
+                                        <th width="5%">حذف</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="itemsTableBody">
+                                    <!-- سيتم إضافة الصفوف هنا ديناميكياً -->
+                                </tbody>
+                                <tfoot class="table-light">
+                                    <tr>
+                                        <td colspan="7" class="text-end fw-bold fs-5">المجموع الفرعي:</td>
+                                        <td colspan="2" class="fw-bold fs-5 text-center" id="subtotal">0.00 ج.م</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="7" class="text-end fw-bold fs-5">ضريبة القيمة المضافة (14%):</td>
+                                        <td colspan="2" class="fw-bold fs-5 text-center" id="taxAmount">0.00 ج.م</td>
+                                    </tr>
+                                    <tr class="table-primary">
+                                        <td colspan="7" class="text-end fw-bold fs-4">الإجمالي النهائي:</td>
+                                        <td colspan="2" class="fw-bold fs-4 text-center" id="totalAmount">0.00 ج.م</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- شروط التوريد -->
+                    <div class="section-card mb-4">
+                        <h4 class="section-title">
+                            <i class="fas fa-clipboard-list me-2"></i>
+                            شروط التوريد
+                        </h4>
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">مدة التوريد</label>
+                                <input type="text" class="form-control form-control-lg" id="deliveryPeriod" 
+                                       placeholder="مثال: 15 يوم من تاريخ الطلب">
+                            </div>
+                            <div class="col-md-8">
+                                <label class="form-label fw-bold">مكان التسليم</label>
+                                <input type="text" class="form-control form-control-lg" id="deliveryLocation" 
+                                       placeholder="مثال: المقر الرئيسي - القاهرة">
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-label fw-bold">شروط الدفع</label>
+                                <textarea class="form-control form-control-lg" id="paymentTerms" rows="2" 
+                                          placeholder="مثال: الدفع بعد 30 يوم من الاستلام"></textarea>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-label fw-bold">ملاحظات</label>
+                                <textarea class="form-control form-control-lg" id="notes" rows="3" 
+                                          placeholder="أي ملاحظات إضافية..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- أزرار الإجراءات -->
+                    <div class="d-flex justify-content-center gap-3 mt-4">
+                        <button type="button" class="btn btn-secondary btn-lg px-5" onclick="clearForm()">
+                            <i class="fas fa-eraser me-2"></i>
+                            مسح النموذج
+                        </button>
+                        <button type="submit" class="btn btn-success btn-lg px-5">
+                            <i class="fas fa-save me-2"></i>
+                            حفظ الطلب
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: إضافة مورد جديد -->
+<div class="modal fade" id="addSupplierModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-truck me-2"></i>
+                    إضافة مورد جديد
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addSupplierForm">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">اسم المورد *</label>
+                            <input type="text" class="form-control" id="newSupplierName" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">الرقم الضريبي</label>
+                            <input type="text" class="form-control" id="newSupplierTaxId">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">التليفون</label>
+                            <input type="text" class="form-control" id="newSupplierPhone">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">البريد الإلكتروني</label>
+                            <input type="email" class="form-control" id="newSupplierEmail">
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label fw-bold">العنوان</label>
+                            <textarea class="form-control" id="newSupplierAddress" rows="2"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                <button type="button" class="btn btn-success" onclick="saveNewSupplier()">
+                    <i class="fas fa-save me-2"></i>
+                    حفظ المورد
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: إضافة صنف جديد -->
+<div class="modal fade" id="addProductModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-box me-2"></i>
+                    إضافة صنف جديد للمخزن
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addProductForm">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">كود الصنف *</label>
+                            <input type="text" class="form-control" id="newProductCode" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">السعر الافتراضي</label>
+                            <input type="number" class="form-control" id="newProductPrice" step="0.01" value="0">
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label fw-bold">اسم الصنف *</label>
+                            <input type="text" class="form-control" id="newProductName" required>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label fw-bold">الوصف</label>
+                            <textarea class="form-control" id="newProductDescription" rows="2"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                <button type="button" class="btn btn-success" onclick="saveNewProduct()">
+                    <i class="fas fa-save me-2"></i>
+                    حفظ الصنف
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/index.js') }}"></script>
+{% endblock %}
