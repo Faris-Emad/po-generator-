@@ -19,8 +19,17 @@ import os
 
 # Register Arabic fonts
 FONTS_DIR = os.path.join(os.path.dirname(__file__), 'fonts')
-pdfmetrics.registerFont(TTFont('ArabicFont', os.path.join(FONTS_DIR, 'NotoSansArabic-Regular.ttf')))
-pdfmetrics.registerFont(TTFont('ArabicFont-Bold', os.path.join(FONTS_DIR, 'NotoSansArabic-Bold.ttf')))
+ARABIC_FONT_REGULAR = os.path.join(FONTS_DIR, 'NotoSansArabic-Regular.ttf')
+ARABIC_FONT_BOLD = os.path.join(FONTS_DIR, 'NotoSansArabic-Bold.ttf')
+
+# Verify font files exist before registering
+if not os.path.exists(ARABIC_FONT_REGULAR):
+    raise FileNotFoundError(f"Arabic regular font not found: {ARABIC_FONT_REGULAR}")
+if not os.path.exists(ARABIC_FONT_BOLD):
+    raise FileNotFoundError(f"Arabic bold font not found: {ARABIC_FONT_BOLD}")
+
+pdfmetrics.registerFont(TTFont('ArabicFont', ARABIC_FONT_REGULAR))
+pdfmetrics.registerFont(TTFont('ArabicFont-Bold', ARABIC_FONT_BOLD))
 
 
 def prepare_arabic_text(text):
